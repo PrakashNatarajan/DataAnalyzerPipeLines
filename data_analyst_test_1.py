@@ -19,6 +19,8 @@ def _validate_source_file():
   
 dag = DAG(dag_id='data_analyst_test_1', schedule='@daily', default_args=default_args, catchup=False)
 
+build_file_paths = EmptyOperator(task_id='build_file_paths', dag=dag)
+
 check_source_status = BranchPythonOperator(task_id='check_source_status', python_callable=_check_source_file_status, do_xcom_push=False, dag=dag)
 source_file_exception = EmptyOperator(task_id='source_file_exception', dag=dag)
 
@@ -32,6 +34,6 @@ drop_destination_data = EmptyOperator(task_id='drop_destination_data', trigger_r
 transform_load_destination = EmptyOperator(task_id='transform_load_destination', trigger_rule='none_failed_or_skipped', dag=dag)
 
 
-check_source_status >> [download_source_file, source_file_exception]
+build_file_paths >> check_source_status >> [download_source_file, source_file_exception]
 download_source_file >> validate_source_file >> [drop_destination_data, validation_failed_exception]
 drop_destination_data >> transform_load_destination
