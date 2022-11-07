@@ -19,4 +19,7 @@ accurate = EmptyOperator(task_id='accurate', dag=dag)
 
 inaccurate = EmptyOperator(task_id='inaccurate', dag=dag)
 
+storing = EmptyOperator(task_id='storing', trigger_rule='none_failed_or_skipped', dag=dag)
+
 choose_best_model >> [accurate, inaccurate]
+accurate >> storing
