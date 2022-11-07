@@ -11,7 +11,7 @@ def _choose_best_model():
     return 'accurate'
   return 'inaccurate'
   
-dag = DAG(dag_id='branch_operator_test', schedule_interval='@daily', default_args=default_args, catchup=False)
+dag = DAG(dag_id='branch_operator_test_1', schedule_interval='@daily', default_args=default_args, catchup=False)
 
 choose_best_model = BranchPythonOperator(task_id='choose_best_model', python_callable=_choose_best_model, do_xcom_push=False, dag=dag)
 
