@@ -1,6 +1,6 @@
 from airflow import DAG
-from airflow.operators.python import BranchPythonOperator
 from airflow.operators.empty import EmptyOperator
+from airflow.operators.python import BranchPythonOperator
 from datetime import datetime
 
 default_args = {'start_date': datetime(2022, 11, 7)}
