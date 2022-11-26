@@ -2,7 +2,7 @@ import yaml
 
 def _capture_config_settings():
   configuration_settings = {}
-  configs_file_path = "/mnt/d/WorkSpace/RubyProjects/DssDataLoader/AwsDataMongo/dataloaders.yml"
+  configs_file_path = "/mnt/d/WorkSpace/PythonProjects/DataAnalyzerPipeLines/dataloaders.yml"
   with open(configs_file_path, "r") as stream:
     try:
       configuration_settings = yaml.safe_load(stream)
