@@ -19,8 +19,8 @@ def _check_source_file_status(**kwargs):
   print("\n\n\n")
   print("Checking Source File Status")
   #loader_configs = tsk_intx.xcom_pull(key='loader_configs', task_ids='build_file_paths')
-  ti = kwargs['ti']
-  loader_configs = ti.xcom_pull(task_ids='build_file_paths')
+  tsk_intx = kwargs['ti'] ##Task Instance
+  loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   for key, val in loader_configs.items():
     print(key, val)
   print("\n\n\n")
