@@ -12,11 +12,15 @@ loader_configs = {}
 def _build_file_paths():
   loader_configs['src_file_path'] = src_dst_worker.build_source_file_path(configs=loader_configs)
   loader_configs['dst_file_path'] = src_dst_worker.build_destination_file_path(configs=loader_configs)
-  #return context
+  #tsk_intx.xcom_push(key='loader_configs', value=loader_configs)
+  return loader_configs
 
-def _check_source_file_status():
+def _check_source_file_status(**kwargs):
   print("\n\n\n")
   print("Checking Source File Status")
+  #loader_configs = tsk_intx.xcom_pull(key='loader_configs', task_ids='build_file_paths')
+  ti = kwargs['ti']
+  loader_configs = ti.xcom_pull(task_ids='build_file_paths')
   for key, val in loader_configs.items():
     print(key, val)
   print("\n\n\n")
@@ -61,7 +65,7 @@ dat_dag = DAG(dag_id='data_analyst_test_3', schedule='@daily', default_args=defa
 loader_configs = configs_worker.fetch_loader_configs(loader_name="QGP_USER_LEVEL")
 build_file_paths = PythonOperator(task_id='build_file_paths', python_callable=_build_file_paths, dag=dat_dag)
 
-check_source_status = BranchPythonOperator(task_id='check_source_status', python_callable=_check_source_file_status, do_xcom_push=False, dag=dat_dag)
+check_source_status = BranchPythonOperator(task_id='check_source_status', provide_context=True, python_callable=_check_source_file_status, do_xcom_push=False, dag=dat_dag)
 source_file_exception = PythonOperator(task_id='source_file_exception', python_callable=_source_file_exception, dag=dat_dag)
 
 download_source_file = PythonOperator(task_id='download_source_file', python_callable=_download_source_file, dag=dat_dag)
