@@ -18,7 +18,7 @@ def build_source_file_path(configs):
 
 def build_destination_file_path(configs):
   dst_file_path = "{dst_full_dir}/{dst_file_name}_{curr_timestamp}.csv"
-  dst_full_dir = configs['IMPORT_DIR'] + "/" + configs['LOCAL_FOLDER']
+  dst_full_dir = configs['IMPORT_DIR'] + "/" + configs['LOCAL_FOLDER'].split("/")[0]
   curr_timestamp = datetime.now().strftime("%Y%m%d_%H%M")
   dst_file_path = dst_file_path.format(dst_full_dir = dst_full_dir, dst_file_name = configs['AWS_FILE'], curr_timestamp = curr_timestamp)
   return dst_file_path
