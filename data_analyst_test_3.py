@@ -29,35 +29,59 @@ def _check_source_file_status(**kwargs):
     return 'download_source_file'
   return 'source_file_exception'
 
-def _source_file_exception():
+def _source_file_exception(**kwargs):
   print("\n\n\n")
   print("Sent Mail")
+  tsk_intx = kwargs['ti'] ##Task Instance
+  loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  for key, val in loader_configs.items():
+    print(key, val)
   print("\n\n\n")
 
-def _download_source_file():
+def _download_source_file(**kwargs):
   print("\n\n\n")
   print("Downloaded File")
+  tsk_intx = kwargs['ti'] ##Task Instance
+  loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  for key, val in loader_configs.items():
+    print(key, val)
   print("\n\n\n")
 
-def _validate_source_file():
+def _validate_source_file(**kwargs):
+  tsk_intx = kwargs['ti'] ##Task Instance
+  loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  for key, val in loader_configs.items():
+    print(key, val)
   validationPassed = True
   if validationPassed:
     return 'drop_destination_data'
   return 'validation_failed_exception'
 
-def _validation_failed_exception():
+def _validation_failed_exception(**kwargs):
   print("\n\n\n")
   print("Sent Mail")
+  tsk_intx = kwargs['ti'] ##Task Instance
+  loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  for key, val in loader_configs.items():
+    print(key, val)
   print("\n\n\n")
 
-def _drop_destination_data():
+def _drop_destination_data(**kwargs):
   print("\n\n\n")
   print("Dropped Existing Data")
+  tsk_intx = kwargs['ti'] ##Task Instance
+  loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  for key, val in loader_configs.items():
+    print(key, val)
   print("\n\n\n")
 
-def _transform_load_destination():
+def _transform_load_destination(**kwargs):
   print("\n\n\n")
   print("Transform and Loading New Data")
+  tsk_intx = kwargs['ti'] ##Task Instance
+  loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  for key, val in loader_configs.items():
+    print(key, val)
   print("\n\n\n")
   
 dat_dag = DAG(dag_id='data_analyst_test_3', schedule='@daily', default_args=default_args, catchup=False)
