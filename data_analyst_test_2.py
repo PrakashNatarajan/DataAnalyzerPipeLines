@@ -3,14 +3,14 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.python import BranchPythonOperator
 from datetime import datetime
 import configs_worker
-import source_destination_worker as src_dst_worker
+import file_paths_worker
 
 
 default_args = {'start_date': datetime(2022, 11, 7)}
 
 def _build_file_paths(loader_configs):
-  loader_configs['src_file_path'] = src_dst_worker.build_source_file_path(configs=loader_configs)
-  loader_configs['dst_file_path'] = src_dst_worker.build_destination_file_path(configs=loader_configs)
+  loader_configs['src_file_path'] = file_paths_worker.build_source_file_path(configs=loader_configs)
+  loader_configs['dst_file_path'] = file_paths_worker.build_destination_file_path(configs=loader_configs)
   #return context
 
 def _check_source_file_status(loader_configs):
