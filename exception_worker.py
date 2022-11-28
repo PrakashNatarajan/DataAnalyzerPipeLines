@@ -7,7 +7,6 @@ import configs_worker
 def source_not_available(loader):
   loader = build_subject_message(loader)
   configs = configs_worker.fetch_aws_configs('AWS_SMTP')
-  print(configs)
   loader['message'] = build_complete_message(configs, loader)
   send_exception_mail(configs, loader)
 
