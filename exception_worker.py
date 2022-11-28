@@ -43,14 +43,14 @@ def build_subject_message(loader):
 def build_complete_message(configs, loader):
   message = MIMEMultipart('alternative')
   message['Subject'] = loader['subject']
-  message['From'] = formataddr((configs['SENDERNAME'], configs['SENDER_MAIL']))
+  message['From'] = formataddr((configs['SENDER_NAME'], configs['SENDER_MAIL']))
   message['To'] = configs['RECIPIENTS']
   # Comment or delete the next line if you are not using a configuration set
   # message.add_header('X-SES-CONFIGURATION-SET',CONFIGURATION_SET)
 
   # Record the MIME types of both parts - text/plain and text/html.
-  part1 = MIMEText(loader['BODY_TEXT'], 'plain')
-  part2 = MIMEText(loader['BODY_HTML'], 'html')
+  part1 = MIMEText(loader['body_text'], 'plain')
+  part2 = MIMEText(loader['body_html'], 'html')
 
   # Attach parts into message container.
   # According to RFC 2046, the last part of a multipart message, in this case
