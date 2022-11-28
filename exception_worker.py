@@ -62,12 +62,11 @@ def build_complete_message(configs, loader):
   return message
 
 def send_exception_mail(configs, loader):
-  recipients_list = ", ".join(configs['RECIPIENTS'])
   try:
     with SMTP(configs['SERVER']) as server:
       server.starttls()
       server.login(configs['ACCESS_KEY'], configs['SECRET_KEY'])
-      server.sendmail(configs['SENDER_MAIL'], recipients_list, loader['message'].as_string())
+      server.sendmail(configs['SENDER_MAIL'], configs['RECIPIENTS'], loader['message'].as_string())
       server.close()
       print("Email sent!")
   except SMTPException as error:

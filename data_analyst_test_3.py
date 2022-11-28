@@ -4,6 +4,7 @@ from airflow.operators.python import BranchPythonOperator
 from datetime import datetime
 import configs_worker
 import source_destination_worker as src_dst_worker
+import exception_worker
 
 
 default_args = {'start_date': datetime(2022, 11, 7)}
@@ -30,13 +31,10 @@ def _check_source_file_status(**kwargs):
   return 'source_file_exception'
 
 def _source_file_exception(**kwargs):
-  print("\n\n\n")
-  print("Sent Mail")
   tsk_intx = kwargs['ti'] ##Task Instance
   loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  for key, val in loader_configs.items():
-    print(key, val)
-  print("\n\n\n")
+  exception_worker.source_not_available(loader_configs)
+
 
 def _download_source_file(**kwargs):
   print("\n\n\n")
@@ -58,13 +56,9 @@ def _validate_source_file(**kwargs):
   return 'validation_failed_exception'
 
 def _validation_failed_exception(**kwargs):
-  print("\n\n\n")
-  print("Sent Mail")
   tsk_intx = kwargs['ti'] ##Task Instance
   loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  for key, val in loader_configs.items():
-    print(key, val)
-  print("\n\n\n")
+  exception_worker.source_valid_failed(loader_configs)
 
 def _drop_destination_data(**kwargs):
   print("\n\n\n")
