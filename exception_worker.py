@@ -5,25 +5,27 @@ from email.mime.text import MIMEText
 import configs_worker
 
 def source_not_available(loader):
-  loader = build_subject_message(loader)
+  loader['subject'] = "Source File Not Available"
+  loader = build_message_body(loader)
   configs = configs_worker.fetch_aws_configs('AWS_SMTP')
   loader['message'] = build_complete_message(configs, loader)
   send_exception_mail(configs, loader)
 
 def source_valid_failed(loader):
-  loader = build_subject_message(loader)
+  loader['subject'] = "Source File Validation Failed"
+  loader = build_message_body(loader)
   configs = configs_worker.fetch_aws_configs('AWS_SMTP')
   loader['message'] = build_complete_message(configs, loader)
   send_exception_mail(configs, loader)
 
 def error_while_process(loader):
-  loader = build_subject_message(loader)
+  loader['subject'] = "Error While Processing Data"
+  loader = build_message_body(loader)
   configs = configs_worker.fetch_aws_configs('AWS_SMTP')
   loader['message'] = build_complete_message(configs, loader)
   send_exception_mail(configs, loader)
 
-def build_subject_message(loader):
-  loader['subject'] = "Amazon SES Test - SSL"
+def build_message_body(loader):
   loader['body_text'] = ("Amazon SES Test - SSL\r\n"
              "This email was sent through the Amazon SES SMTP "
              "Interface using the Python smtplib package.")
