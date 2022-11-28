@@ -2,7 +2,7 @@ import boto3
 import botocore
 import configs_worker
 
-def check_source_file_status(loader):
+def check_file_status(loader):
   src_file_status = False
   try:
     object = _build_sss_object(loader['src_file_path'])
