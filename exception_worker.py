@@ -1,5 +1,5 @@
 from email.utils import formataddr
-from smtplib import SMTP_SSL, SMTPException
+from smtplib import SMTP, SMTPException
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import configs_worker
@@ -7,6 +7,7 @@ import configs_worker
 def source_not_available(loader):
   loader = build_subject_message(loader)
   configs = configs_worker.fetch_aws_configs('AWS_SMTP')
+  print(configs)
   loader['message'] = build_complete_message(configs, loader)
   send_exception_mail(configs, loader)
 
@@ -44,7 +45,7 @@ def build_complete_message(configs, loader):
   message = MIMEMultipart('alternative')
   message['Subject'] = loader['subject']
   message['From'] = formataddr((configs['SENDER_NAME'], configs['SENDER_MAIL']))
-  message['To'] = configs['RECIPIENTS']
+  message['To'] = ", ".join(configs['RECIPIENTS'])
   # Comment or delete the next line if you are not using a configuration set
   # message.add_header('X-SES-CONFIGURATION-SET',CONFIGURATION_SET)
 
@@ -60,10 +61,12 @@ def build_complete_message(configs, loader):
   return message
 
 def send_exception_mail(configs, loader):
+  recipients_list = ", ".join(configs['RECIPIENTS'])
   try:
-    with SMTP_SSL(configs['SERVER'], configs['PORT']) as server:
+    with SMTP(configs['SERVER']) as server:
+      server.starttls()
       server.login(configs['ACCESS_KEY'], configs['SECRET_KEY'])
-      server.sendmail(configs['SENDER_MAIL'], configs['RECIPIENTS'], loader['message'].as_string())
+      server.sendmail(configs['SENDER_MAIL'], recipients_list, loader['message'].as_string())
       server.close()
       print("Email sent!")
   except SMTPException as error:
