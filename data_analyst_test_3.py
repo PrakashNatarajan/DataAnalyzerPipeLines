@@ -5,7 +5,7 @@ from datetime import datetime
 import configs_worker
 import file_paths_worker
 import exception_worker
-
+import validation_worker
 
 default_args = {'start_date': datetime(2022, 11, 7)}
 loader_configs = {}
@@ -48,10 +48,8 @@ def _download_source_file(**kwargs):
 def _validate_source_file(**kwargs):
   tsk_intx = kwargs['ti'] ##Task Instance
   loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  for key, val in loader_configs.items():
-    print(key, val)
-  validationPassed = True
-  if validationPassed:
+  validColumns = validation_worker.right_column_names?(loader_configs)
+  if validColumns:
     return 'drop_destination_data'
   return 'validation_failed_exception'
 
