@@ -14,7 +14,7 @@ def check_file_status(loader):
   return src_file_status
 
 
-def download_source_file(loader):
+def download_data_file(loader):
   object = _build_sss_object(loader['src_file_path'])
   object.download_file(loader['dst_file_path'])
 
