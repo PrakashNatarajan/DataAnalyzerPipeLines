@@ -40,7 +40,7 @@ def _download_source_file(**kwargs):
   print("Downloaded File")
   tsk_intx = kwargs['ti'] ##Task Instance
   loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  fileAvailability = source_worker.download_data_file(loader_configs)
+  source_worker.download_data_file(loader_configs)
 
 def _validate_source_file(**kwargs):
   tsk_intx = kwargs['ti'] ##Task Instance
