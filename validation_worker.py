@@ -3,7 +3,7 @@ from csv import DictReader
 
 def right_column_names(loader):
   valid_columns = False
-  column_names = _fetch_header_columns(loader['src_file_path'])
+  column_names = _fetch_header_columns(loader['dst_file_path'])
   equal_columns = column_names == loader['COLUMNS']
   mapped_columns = zip(tuple(column_names), tuple(loader['COLUMNS']))
   mapped_columns = list(mapped_columns)
@@ -14,7 +14,7 @@ def right_column_names(loader):
 
 
 def fetch_column_names(loader):
-  column_names = _fetch_header_columns(loader['src_file_path'])
+  column_names = _fetch_header_columns(loader['dst_file_path'])
   return column_names
 
 
