@@ -4,13 +4,18 @@ from csv import DictReader
 def right_column_names(loader):
   valid_columns = False
   column_names = _fetch_header_columns(loader['src_file_path'])
-  equal_columns = column_names == loader['MONGO_FIELDS']
-  mapped_columns = zip(tuple(column_names), tuple(loader['MONGO_FIELDS']))
+  equal_columns = column_names == loader['COLUMNS']
+  mapped_columns = zip(tuple(column_names), tuple(loader['COLUMNS']))
   mapped_columns = list(mapped_columns)
   matched_columns = all([zip_colm[0] == zip_colm[1] for zip_colm in mapped_columns])
   if equal_columns == matched_columns:
     valid_columns = True
   return valid_columns
+
+
+def fetch_column_names(loader):
+  column_names = _fetch_header_columns(loader['src_file_path'])
+  return column_names
 
 
 def _fetch_header_columns(file_path):

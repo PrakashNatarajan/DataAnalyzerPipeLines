@@ -33,13 +33,15 @@ def build_message_body(loader):
   loader['body_html'] = """<html>
                  <head></head>
                  <body>
-                   <h1>Amazon SES SMTP Email Test - SSL</h1>
+                   <h3>Source File Name ==> {source_file_name}</h3>
+                   <h3>Source Columns ==> {source_columns}</h3>
+                   <h3>DST Table Columns ==> {table_columns}</h3>
                    <p>This email was sent with Amazon SES using the
                    <a href='https://www.python.org/'>Python</a>
                    <a href='https://docs.python.org/3/library/smtplib.html'>smtplib</a> library.</p>
                  </body>
               </html>"""
-
+  loader['body_html'].format(source_file_name=loader['src_file_path'], source_columns=loader['source_columns'], table_columns=loader['COLUMNS'])
   return loader
 
 def build_complete_message(configs, loader):
