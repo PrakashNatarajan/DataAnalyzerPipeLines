@@ -6,14 +6,20 @@ import configs_worker
 
 def source_not_available(loader):
   loader['subject'] = "Source File Not Available"
-  loader = build_message_body(loader)
+  msg_content = "<h3>Source File Name ==> {source_file_name}</h3>"
+  msg_content = msg_content.format(source_file_name = loader['src_file_path'])
+  loader = build_message_body(loader=loader, msg_content=msg_content)
   configs = configs_worker.fetch_aws_configs('AWS_SMTP')
   loader['message'] = build_complete_message(configs, loader)
   send_exception_mail(configs, loader)
 
 def source_valid_failed(loader):
   loader['subject'] = "Source File Validation Failed"
-  loader = build_message_body(loader)
+  msg_content = """<h3>Source File Name ==> {source_file_name}</h3>
+                   <h3>Source Columns ==> {source_columns}</h3>
+                   <h3>DST Table Columns ==> {table_columns}</h3>"""
+  msg_content = msg_content.format(source_file_name=loader['src_file_path'], source_columns=loader['source_columns'], table_columns=loader['COLUMNS'])
+  loader = build_message_body(loader=loader, msg_content=msg_content)
   configs = configs_worker.fetch_aws_configs('AWS_SMTP')
   loader['message'] = build_complete_message(configs, loader)
   send_exception_mail(configs, loader)
@@ -25,7 +31,7 @@ def error_while_process(loader):
   loader['message'] = build_complete_message(configs, loader)
   send_exception_mail(configs, loader)
 
-def build_message_body(loader):
+def build_message_body(loader, msg_content):
   loader['body_text'] = ("Amazon SES Test - SSL\r\n"
              "This email was sent through the Amazon SES SMTP "
              "Interface using the Python smtplib package.")
@@ -33,15 +39,13 @@ def build_message_body(loader):
   loader['body_html'] = """<html>
                  <head></head>
                  <body>
-                   <h3>Source File Name ==> {source_file_name}</h3>
-                   <h3>Source Columns ==> {source_columns}</h3>
-                   <h3>DST Table Columns ==> {table_columns}</h3>
+                   {msg_content}
                    <p>This email was sent with Amazon SES using the
                    <a href='https://www.python.org/'>Python</a>
                    <a href='https://docs.python.org/3/library/smtplib.html'>smtplib</a> library.</p>
                  </body>
               </html>"""
-  loader['body_html'].format(source_file_name=loader['src_file_path'], source_columns=loader['source_columns'], table_columns=loader['COLUMNS'])
+  loader['body_html'].format(msg_content=msg_content)
   return loader
 
 def build_complete_message(configs, loader):
