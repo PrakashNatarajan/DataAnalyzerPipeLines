@@ -17,6 +17,7 @@ loader_configs = {}
 def _build_file_paths():
   loader_configs['src_file_path'] = file_paths_worker.build_source_file_path(configs=loader_configs)
   loader_configs['dst_file_path'] = file_paths_worker.build_destination_file_path(configs=loader_configs)
+  loader_configs['current_time'] = datetime.now().strftime("%Y%m%d%H%M")
   #tsk_intx.xcom_push(key='loader_configs', value=loader_configs)
   return loader_configs
 
@@ -47,7 +48,7 @@ def _validate_source_file(**kwargs):
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   validColumns = validation_worker.right_column_names?(load_configs)
   if validColumns:
-    return 'drop_destination_data'
+    return 'transform_load_destination'
   return 'validation_failed_exception'
 
 def _validation_failed_exception(**kwargs):
@@ -55,18 +56,29 @@ def _validation_failed_exception(**kwargs):
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   exception_worker.source_valid_failed(load_configs)
 
-def _drop_destination_data(**kwargs):
-  print("Dropped Existing Data")
-  tsk_intx = kwargs['ti'] ##Task Instance
-  configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  database_worker.delete_record_query(configs['table'], configs['columns'], configs['values'])
-
 def _transform_load_destination(**kwargs):
   print("Transform and Loading New Data")
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   trans_load_worker.kpi_user_level(load_configs)
 
+def _add_missed_user_data(**kwargs):
+  print("Transform and Loading New Data")
+  tsk_intx = kwargs['ti'] ##Task Instance
+  load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  #trans_load_worker.kpi_user_level(load_configs)
+
+def _assign_user_grouped_data(**kwargs):
+  print("Transform and Loading New Data")
+  tsk_intx = kwargs['ti'] ##Task Instance
+  load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  #trans_load_worker.kpi_user_level(load_configs)
+
+def _remove_previous_data(**kwargs):
+  print("Dropped Existing Data")
+  tsk_intx = kwargs['ti'] ##Task Instance
+  configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  database_worker.delete_record_query(configs['TABLE'], configs['COLUMNS'], configs['values'])
   
 dat_dag = DAG(dag_id='daf_one_internal_level', schedule='@daily', default_args=default_args, catchup=False)
 
@@ -81,11 +93,11 @@ download_source_file = PythonOperator(task_id='download_source_file', python_cal
 validate_source_file = BranchPythonOperator(task_id='validate_source_file', python_callable=_validate_source_file, do_xcom_push=False, dag=dat_dag)
 validation_failed_exception = PythonOperator(task_id='validation_failed_exception', python_callable=_validation_failed_exception, dag=dat_dag)
 
-drop_destination_data = PythonOperator(task_id='drop_destination_data', trigger_rule='none_failed_or_skipped', python_callable=_drop_destination_data, dag=dat_dag)
-
 transform_load_destination = PythonOperator(task_id='transform_load_destination', trigger_rule='none_failed_or_skipped', python_callable=_transform_load_destination, dag=dat_dag)
-
+add_missed_user_data = PythonOperator(task_id='add_missed_user_data', trigger_rule='none_failed_or_skipped', python_callable=_add_missed_user_data, dag=dat_dag)
+assign_user_grouped_data = PythonOperator(task_id='assign_user_grouped_data', trigger_rule='none_failed_or_skipped', python_callable=_assign_user_grouped_data, dag=dat_dag)
+remove_previous_data = PythonOperator(task_id='remove_previous_data', trigger_rule='none_failed_or_skipped', python_callable=_remove_previous_data, dag=dat_dag)
 
 build_file_paths >> check_source_status >> [download_source_file, source_file_exception]
-download_source_file >> validate_source_file >> [drop_destination_data, validation_failed_exception]
-drop_destination_data >> transform_load_destination
+download_source_file >> validate_source_file >> [transform_load_destination, validation_failed_exception]
+transform_load_destination >> add_missed_user_data >> assign_user_grouped_data >> remove_previous_data
