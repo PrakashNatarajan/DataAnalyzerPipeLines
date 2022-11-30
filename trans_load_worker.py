@@ -19,7 +19,7 @@ def user_proxy_master(loader):
       print(row)
 
 
-def user_role_hierarchy(loader):
+def internal_role_hierarchy(loader):
   with open(loader['src_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
@@ -28,7 +28,7 @@ def user_role_hierarchy(loader):
       print(row)
 
 
-def rssm_role_hierarchy(loader):
+def external_role_hierarchy(loader):
   with open(loader['src_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
@@ -37,7 +37,7 @@ def rssm_role_hierarchy(loader):
       print(row)
 
 
-def kpi_user_level(loader):
+def daf_internal_level(loader):
   with open(loader['src_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
@@ -46,7 +46,7 @@ def kpi_user_level(loader):
       print(row)
 
 
-def kpi_rssm_level(loader):
+def daf_external_level(loader):
   with open(loader['src_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter

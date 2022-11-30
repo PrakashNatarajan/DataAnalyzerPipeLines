@@ -61,19 +61,19 @@ def _transform_load_destination(**kwargs):
   print("Transform and Loading New Data")
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  trans_load_worker.daf_internal_level(load_configs)
+  trans_load_worker.daf_external_level(load_configs)
 
 def _add_missed_user_data(**kwargs):
   print("Transform and Loading New Data")
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  #trans_load_worker.daf_internal_level(load_configs)
+  #trans_load_worker.daf_external_level(load_configs)
 
 def _assign_user_grouped_data(**kwargs):
   print("Transform and Loading New Data")
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  #trans_load_worker.daf_internal_level(load_configs)
+  #trans_load_worker.daf_external_level(load_configs)
 
 def _remove_previous_data(**kwargs):
   print("Dropped Existing Data")
@@ -81,9 +81,9 @@ def _remove_previous_data(**kwargs):
   configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   database_worker.delete_record_query(configs['TABLE'], configs['COLUMNS'], configs['values'])
   
-dat_dag = DAG(dag_id='daf_one_internal_level', schedule='@daily', default_args=default_args, catchup=False)
+dat_dag = DAG(dag_id='daf_one_external_level', schedule='@daily', default_args=default_args, catchup=False)
 
-loader_configs = configs_worker.fetch_loader_configs(loader_name="ONE_INTERNAL_LEVEL")
+loader_configs = configs_worker.fetch_loader_configs(loader_name="ONE_EXTERNAL_LEVEL")
 build_file_paths = PythonOperator(task_id='build_file_paths', python_callable=_build_file_paths, dag=dat_dag)
 
 check_source_status = BranchPythonOperator(task_id='check_source_status', provide_context=True, python_callable=_check_source_file_status, do_xcom_push=False, dag=dat_dag)
