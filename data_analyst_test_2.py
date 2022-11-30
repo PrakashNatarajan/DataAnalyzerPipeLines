@@ -60,7 +60,7 @@ def _transform_load_destination(loader_configs):
   
 dat_dag = DAG(dag_id='data_analyst_test_2', schedule='@daily', default_args=default_args, catchup=False)
 
-loader_configs = configs_worker.fetch_loader_configs(loader_name="QGP_USER_LEVEL")
+loader_configs = configs_worker.fetch_loader_configs(loader_name="ONE_INTERNAL_LEVEL")
 build_file_paths = PythonOperator(task_id='build_file_paths', python_callable=_build_file_paths, op_kwargs = {"loader_configs" : loader_configs}, dag=dat_dag)
 
 check_source_status = BranchPythonOperator(task_id='check_source_status', python_callable=_check_source_file_status, op_kwargs = {"loader_configs" : loader_configs}, do_xcom_push=False, dag=dat_dag)
