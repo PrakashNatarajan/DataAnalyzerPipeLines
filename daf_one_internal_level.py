@@ -68,7 +68,7 @@ def _transform_load_destination(**kwargs):
   trans_load_worker.kpi_user_level(load_configs)
 
   
-dat_dag = DAG(dag_id='kpi_one_internal_level', schedule='@daily', default_args=default_args, catchup=False)
+dat_dag = DAG(dag_id='daf_one_internal_level', schedule='@daily', default_args=default_args, catchup=False)
 
 loader_configs = configs_worker.fetch_loader_configs(loader_name="ONE_INTERNAL_LEVEL")
 build_file_paths = PythonOperator(task_id='build_file_paths', python_callable=_build_file_paths, dag=dat_dag)
