@@ -15,7 +15,7 @@ default_args = {'start_date': datetime(2022, 11, 7)}
 loader_configs = {}
 
 def _build_file_paths():
-  loader_configs['src_file_path'] = file_paths_worker.build_source_file_path(configs=loader_configs)
+  loader_configs['src_file_path'] = file_paths_worker.build_source_time_file_path(configs=loader_configs)
   loader_configs['dst_file_path'] = file_paths_worker.build_destination_file_path(configs=loader_configs)
   loader_configs['current_time'] = datetime.now().strftime("%Y%m%d%H%M")
   #tsk_intx.xcom_push(key='loader_configs', value=loader_configs)
