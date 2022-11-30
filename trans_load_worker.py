@@ -2,7 +2,7 @@ import csv
 
 
 def user_auth_master(loader):
-  with open(loader['src_file_path'], 'r') as read_obj:
+  with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
@@ -11,7 +11,7 @@ def user_auth_master(loader):
 
 
 def user_proxy_master(loader):
-  with open(loader['src_file_path'], 'r') as read_obj:
+  with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
@@ -20,7 +20,7 @@ def user_proxy_master(loader):
 
 
 def internal_role_hierarchy(loader):
-  with open(loader['src_file_path'], 'r') as read_obj:
+  with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
@@ -29,7 +29,7 @@ def internal_role_hierarchy(loader):
 
 
 def external_role_hierarchy(loader):
-  with open(loader['src_file_path'], 'r') as read_obj:
+  with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
@@ -38,7 +38,7 @@ def external_role_hierarchy(loader):
 
 
 def daf_internal_level(loader):
-  with open(loader['src_file_path'], 'r') as read_obj:
+  with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
@@ -47,7 +47,7 @@ def daf_internal_level(loader):
 
 
 def daf_external_level(loader):
-  with open(loader['src_file_path'], 'r') as read_obj:
+  with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
