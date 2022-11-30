@@ -45,7 +45,7 @@ def build_message_body(loader, msg_content):
                    <a href='https://docs.python.org/3/library/smtplib.html'>smtplib</a> library.</p>
                  </body>
               </html>"""
-  loader['body_html'].format(msg_content=msg_content)
+  loader['body_html'] = loader['body_html'].format(msg_content=msg_content)
   return loader
 
 def build_complete_message(configs, loader):
