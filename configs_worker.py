@@ -21,7 +21,7 @@ def fetch_aws_configs(aws_name):
 def fetch_loader_configs(loader_name):
   captured_configs = _capture_config_settings()
   kpi_configs = captured_configs['DATALOADERS'][loader_name]
-  kpi_configs['AWS_DIR'] = captured_configs['AWS_S3']['AWS_DIR']
+  kpi_configs['AWS_DIR'] = captured_configs['AWS_SSS']['AWS_DIR']
   kpi_configs['IMPORT_DIR'] = captured_configs['LOCAL_DIR']['IMPORT']
   kpi_configs['REJECT_DIR'] = captured_configs['LOCAL_DIR']['REJECT']
   return kpi_configs

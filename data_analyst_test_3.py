@@ -48,7 +48,7 @@ def _download_source_file(**kwargs):
 def _validate_source_file(**kwargs):
   tsk_intx = kwargs['ti'] ##Task Instance
   loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  validColumns = validation_worker.right_column_names?(loader_configs)
+  validColumns = validation_worker.right_column_names(loader_configs)
   if validColumns:
     return 'drop_destination_data'
   return 'validation_failed_exception'

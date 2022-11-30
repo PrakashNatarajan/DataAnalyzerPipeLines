@@ -1,7 +1,7 @@
 from csv import DictReader
 
 
-def right_column_names?(loader):
+def right_column_names(loader):
   valid_columns = False
   column_names = _fetch_header_columns(loader['src_file_path'])
   equal_columns = column_names == loader['MONGO_FIELDS']
