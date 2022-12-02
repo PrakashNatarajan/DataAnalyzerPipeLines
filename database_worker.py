@@ -18,11 +18,11 @@ def delete_record_query(table, columns, values):
   cursor = _conn_client_cursor()
 
 
-def add_missed_user_data(table, columns, values):
+def add_missed_user_data(table):
   cursor = _conn_client_cursor()
 
 
-def assign_user_group(table, columns, values):
+def assign_user_group(table):
   cursor = _conn_client_cursor()
 
 
