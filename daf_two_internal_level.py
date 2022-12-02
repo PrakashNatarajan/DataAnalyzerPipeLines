@@ -79,6 +79,7 @@ def _remove_previous_data(**kwargs):
   print("Dropped Existing Data")
   tsk_intx = kwargs['ti'] ##Task Instance
   configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  configs['values'] = ""
   database_worker.delete_record_query(configs['TABLE'], configs['COLUMNS'], configs['values'])
   
 dat_dag = DAG(dag_id='daf_two_internal_level', schedule='@daily', default_args=default_args, catchup=False)
