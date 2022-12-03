@@ -48,7 +48,7 @@ def daf_internal_level(loader):
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
     for row_dict in csv_dict_reader:
-      row_dict['role_name'] = row_dict['role_user']
+      #row_dict['role_name'] = row_dict['role_user']
       cursor.execute(insert_format, tuple(row_dict.values()))
       #insert_query = insert_format.format(values = str(tuple(row_dict.values())))
       #cursor.execute(insert_query)
