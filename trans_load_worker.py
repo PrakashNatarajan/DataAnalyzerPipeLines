@@ -72,11 +72,11 @@ def daf_external_level(loader):
       else:
         row_dict['role_user'] = "_".join([row_dict['rscode'], row_dict['smn_code']])
       row_dict['role_plg'] = row_dict['plg']
-      row_dict.delete('role')
-      row_dict.delete('rscode')
-      row_dict.delete('smn_code')
-      row_dict.delete('smn_name')
-      row_dict.delete('plg')
+      del row_dict['role']
+      del row_dict['rscode']
+      del row_dict['smn_code']
+      del row_dict['smn_name']
+      del row_dict['plg']
       #cursor.execute(insert_format, tuple(row.values()))
       insert_query = insert_format.format(values = str(tuple(row_dict.values())))
       cursor.execute(insert_query)
