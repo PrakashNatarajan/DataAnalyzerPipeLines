@@ -67,13 +67,13 @@ def _add_missed_user_data(**kwargs):
   print("Transform and Loading New Data")
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  database_worker.add_missed_user_data(configs['TABLE'])
+  database_worker.add_missed_user_data(load_configs['TABLE'])
 
 def _assign_user_grouped_data(**kwargs):
   print("Transform and Loading New Data")
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  database_worker.assign_user_group(configs['TABLE'])
+  database_worker.assign_user_group(load_configs['TABLE'])
 
 def _remove_previous_data(**kwargs):
   print("Dropped Existing Data")
