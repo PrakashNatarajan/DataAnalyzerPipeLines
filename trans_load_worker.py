@@ -38,7 +38,7 @@ def external_role_hierarchy(loader):
 
 
 def daf_internal_level(loader):
-  cursor = database_worker.get_db_client_cursor()
+  client, cursor = database_worker.get_db_client_cursor()
   columns = ", ".join(loader['COLUMNS'])
   placeholders = ', '.join(['%s'] * len(loader['COLUMNS']))
   #insert_format = "INSERT INTO %s ( %s ) VALUES ( %s )" % (loader['TABLE'], columns, placeholders)
@@ -51,6 +51,7 @@ def daf_internal_level(loader):
       #cursor.execute(insert_format, tuple(row.values()))
       insert_query = insert_format.format(values = str(tuple(row_dict.values())))
       cursor.execute(insert_query)
+      client.commit()
 
 
 def daf_external_level(loader):
