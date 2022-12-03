@@ -54,7 +54,7 @@ def _validate_source_file(**kwargs):
 def _validation_failed_exception(**kwargs):
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  loader_configs['source_columns'] = validation_worker.fetch_column_names(load_configs)
+  load_configs['source_columns'] = validation_worker.fetch_column_names(load_configs)
   exception_worker.source_valid_failed(load_configs)
 
 def _transform_load_destination(**kwargs):

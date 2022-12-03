@@ -61,7 +61,7 @@ def _transform_load_destination(**kwargs):
   print("Transform and Loading New Data")
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  #trans_load_worker.daf_internal_level(load_configs)
+  trans_load_worker.daf_internal_level(load_configs)
 
 def _add_missed_user_data(**kwargs):
   print("Transform and Loading New Data")
