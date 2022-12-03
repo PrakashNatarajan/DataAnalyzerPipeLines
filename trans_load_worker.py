@@ -47,7 +47,7 @@ def daf_internal_level(loader):
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
-    for row in csv_dict_reader:
+    for row_dict in csv_dict_reader:
       #cursor.execute(insert_format, tuple(row.values()))
       insert_query = insert_format.format(values = str(tuple(row_dict.values())))
       cursor.execute(insert_query)
@@ -55,10 +55,22 @@ def daf_internal_level(loader):
 
 
 def daf_external_level(loader):
+  client, cursor = database_worker.get_db_client_cursor()
+  columns = ", ".join(loader['COLUMNS'])
+  placeholders = ', '.join(['%s'] * len(loader['COLUMNS']))
+  #insert_format = "INSERT INTO %s ( %s ) VALUES ( %s )" % (loader['TABLE'], columns, placeholders)
+  insert_format = "INSERT INTO %s ( %s ) VALUES {values}" % (loader['TABLE'], columns)
   with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
-    for row in csv_dict_reader:
-      print(row)
-
+    for row_dict in csv_dict_reader:
+      row_dict['role_level'] = row_dict['role']
+      row_dict.delete('role')
+      row_dict['role_user'] = "_".join([row_dict['rscode'], row_dict['smn_code']] 
+      row_dict.delete('rscode')
+      row_dict.delete('smn_code')
+      #cursor.execute(insert_format, tuple(row.values()))
+      insert_query = insert_format.format(values = str(tuple(row_dict.values())))
+      cursor.execute(insert_query)
+      client.commit()
