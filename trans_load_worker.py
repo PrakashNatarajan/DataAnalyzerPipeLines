@@ -25,7 +25,7 @@ def internal_role_hierarchy(loader):
   client, cursor = database_worker.get_db_client_cursor()
   columns = ", ".join(loader['DB_CLOUMNS'])
   placeholders = ', '.join(['%s'] * len(loader['DB_CLOUMNS']))
-  select_format = "SELECT COUNT(*) FROM %s WHERE ( %s )" % (loader['TABLE'], placeholders)
+  select_format = "SELECT COUNT(*) FROM %s WHERE {where_clause};" % (loader['TABLE'])
   insert_format = "INSERT INTO %s ( %s ) VALUES ( %s )" % (loader['TABLE'], columns, placeholders)
   with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
@@ -34,7 +34,8 @@ def internal_role_hierarchy(loader):
     for row_dict in csv_dict_reader:
       role_hier_list = segregation_worker.internal_normalize_roles(row_dict)
       for hier_dict in role_hier_list:
-        cursor.execute(select_format, hier_dict)
+        where_clause = str(hier_dict).replace("':", " =").replace(", '", " AND ").replace("{'", "").replace("'}", "")
+        cursor.execute(select_format.format(where_clause = where_clause))
         hier_count = cursor.fetchall()
         if hier_count[0][0] == 0:
           cursor.execute(insert_format, tuple(hier_dict.values()))
