@@ -1,6 +1,6 @@
 from datetime import datetime
 
-def build_source_file_path(configs):
+def build_source_day_file_path(configs):
   src_file_path = "{aws_full_dir}/{aws_file_name}_{timestamp}.csv000"
   current_datetime = datetime.now()
   aws_dir_paths = ""
