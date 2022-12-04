@@ -1,5 +1,7 @@
 import csv
 import database_worker
+import segregation_worker
+
 
 def user_auth_master(loader):
   with open(loader['dst_file_path'], 'r') as read_obj:
@@ -20,12 +22,19 @@ def user_proxy_master(loader):
 
 
 def internal_role_hierarchy(loader):
+  client, cursor = database_worker.get_db_client_cursor()
+  columns = ", ".join(loader['DB_CLOUMNS'])
+  placeholders = ', '.join(['%s'] * len(loader['DB_CLOUMNS']))
+  select_format = "SELECT COUNT(*) FROM %s WHERE ( %s )" % (loader['TABLE'], placeholders)
+  insert_format = "INSERT INTO %s ( %s ) VALUES ( %s )" % (loader['TABLE'], columns, placeholders)
   with open(loader['dst_file_path'], 'r') as read_obj:
     #csv_dict_reader = csv.DictReader(read_obj) # pass the file object to DictReader() to get the DictReader object
     csv_dict_reader = csv.DictReader(read_obj, delimiter='|')  # With delimiter
     # iterate over each line as a ordered dictionary
-    for row in csv_dict_reader:
-      print(row)
+    for row_dict in csv_dict_reader:
+      role_hier_list = segregation_worker.internal_normalize_roles(row_dict)
+      for hier_dict in role_hier_list:
+
 
 
 def external_role_hierarchy(loader):
