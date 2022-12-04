@@ -34,6 +34,11 @@ def internal_role_hierarchy(loader):
     for row_dict in csv_dict_reader:
       role_hier_list = segregation_worker.internal_normalize_roles(row_dict)
       for hier_dict in role_hier_list:
+        cursor.execute(select_format, hier_dict)
+        hier_count = cursor.fetchall()
+        if hier_count[0][0] == 0:
+          cursor.execute(insert_format, tuple(hier_dict.values()))
+          client.commit()
 
 
 
