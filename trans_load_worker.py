@@ -34,8 +34,10 @@ def internal_role_hierarchy(loader):
     for row_dict in csv_dict_reader:
       role_hier_list = segregation_worker.internal_normalize_roles(row_dict)
       for hier_dict in role_hier_list:
-        where_clause = str(hier_dict).replace("':", " =").replace(", '", " AND ").replace("{'", "").replace("'}", "")
-        cursor.execute(select_format.format(where_clause = where_clause))
+        where_clause = str(hier_dict).replace("':", " =").replace(", '", " AND ").replace("{'", "").replace("}", "")
+        count_query = select_format.format(where_clause = where_clause)
+        print(count_query)
+        cursor.execute(count_query)
         hier_count = cursor.fetchall()
         if hier_count[0][0] == 0:
           cursor.execute(insert_format, tuple(hier_dict.values()))
