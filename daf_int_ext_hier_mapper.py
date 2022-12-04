@@ -81,4 +81,4 @@ transform_load_destination = PythonOperator(task_id='transform_load_destination'
 
 build_file_paths >> check_source_status >> [download_source_file, source_file_exception]
 download_source_file >> validate_source_file >> [transform_load_destination, validation_failed_exception]
-transform_load_destination >> add_missed_user_data >> assign_user_grouped_data >> remove_previous_data
+#transform_load_destination >> add_missed_user_data >> assign_user_grouped_data >> remove_previous_data
