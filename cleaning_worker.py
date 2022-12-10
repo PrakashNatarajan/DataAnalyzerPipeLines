@@ -23,5 +23,5 @@ def _rmv_non_printables():
 
 
 def _rmv_double_quotes():
-  rmv_cmd = """sed s/\\"// < #{src_file_path} > #{dst_file_path}"""
+  rmv_cmd = """sed s/\\"// < {src_file_path} > {dst_file_path}"""
   return rmv_cmd
