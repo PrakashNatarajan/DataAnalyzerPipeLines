@@ -37,7 +37,6 @@ def _source_file_exception(**kwargs):
   loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   exception_worker.source_not_available(loader_configs)
 
-
 def _download_source_file(**kwargs):
   print("Downloaded File")
   tsk_intx = kwargs['ti'] ##Task Instance
@@ -70,7 +69,7 @@ def _transform_load_destination(**kwargs):
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   trans_load_worker.internal_role_hierarchy(loader_configs)
 
-  
+
 dat_dag = DAG(dag_id='daf_internal_hier_mapper', schedule='@daily', default_args=default_args, catchup=False)
 
 loader_configs = configs_worker.fetch_loader_configs(loader_name="INTERNAL_HIERARCHY")
