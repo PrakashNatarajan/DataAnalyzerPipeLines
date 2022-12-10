@@ -2,9 +2,10 @@
 import os
 
 def internal_hierarchy_file(src_file_path):
-  src_file_one = src_file_path.sub(".csv", "_1.csv")
-  src_file_two = src_file_path.sub(".csv", "_2.csv")
-  src_file_three = src_file_path.sub(".csv", "_3.csv")
+  print("Started to clean the source file")
+  src_file_one = src_file_path.replace(".csv", "_1.csv")
+  src_file_two = src_file_path.replace(".csv", "_2.csv")
+  src_file_three = src_file_path.replace(".csv", "_3.csv")
   os.rename(src_file_path, src_file_one)
   rm_non_printables_cmd = _rmv_non_printables().format(src_file_path = src_file_one, dst_file_path = src_file_two)
   rm_double_quotes_one = _rmv_double_quotes().format(src_file_path = src_file_two, dst_file_path = src_file_three)
@@ -12,6 +13,7 @@ def internal_hierarchy_file(src_file_path):
   os.system(rm_non_printables_cmd) # #To Remove non printable chars
   os.system(rm_double_quotes_one) # #To Remove double quotes
   os.system(rm_double_quotes_two) # #To Remove double quotes
+  print("Completed to clean the source file")
   return src_file_path
 
 
