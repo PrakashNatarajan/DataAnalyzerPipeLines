@@ -1,7 +1,7 @@
 #CleaningWorker
 import os
 
-def internal_hier_file(src_file_path):
+def internal_hierarchy_file(src_file_path):
   src_file_one = src_file_path.sub(".csv", "_1.csv")
   src_file_two = src_file_path.sub(".csv", "_2.csv")
   src_file_three = src_file_path.sub(".csv", "_3.csv")
