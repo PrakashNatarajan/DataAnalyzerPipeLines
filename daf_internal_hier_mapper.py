@@ -6,6 +6,7 @@ import configs_worker
 import file_paths_worker
 import source_worker
 import exception_worker
+import cleaning_worker
 import validation_worker
 import database_worker
 import trans_load_worker
@@ -43,6 +44,12 @@ def _download_source_file(**kwargs):
   loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   source_worker.download_data_file(loader_configs)
 
+def _clean_source_file(**kwargs):
+  tsk_intx = kwargs['ti'] ##Task Instance
+  load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
+  cleaned_src_file = cleaning_worker.internal_hierarchy_file(loader_configs['dst_file_path'])
+  loader_configs['dst_file_path'] = cleaned_src_file
+
 def _validate_source_file(**kwargs):
   tsk_intx = kwargs['ti'] ##Task Instance
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
@@ -73,6 +80,7 @@ check_source_status = BranchPythonOperator(task_id='check_source_status', provid
 source_file_exception = PythonOperator(task_id='source_file_exception', python_callable=_source_file_exception, dag=dat_dag)
 
 download_source_file = PythonOperator(task_id='download_source_file', python_callable=_download_source_file, dag=dat_dag)
+clean_source_file = PythonOperator(task_id='clean_source_file', python_callable=_clean_source_file, dag=dat_dag)
 
 validate_source_file = BranchPythonOperator(task_id='validate_source_file', python_callable=_validate_source_file, do_xcom_push=False, dag=dat_dag)
 validation_failed_exception = PythonOperator(task_id='validation_failed_exception', python_callable=_validation_failed_exception, dag=dat_dag)
@@ -80,5 +88,6 @@ validation_failed_exception = PythonOperator(task_id='validation_failed_exceptio
 transform_load_destination = PythonOperator(task_id='transform_load_destination', trigger_rule='none_failed_or_skipped', python_callable=_transform_load_destination, dag=dat_dag)
 
 build_file_paths >> check_source_status >> [download_source_file, source_file_exception]
-download_source_file >> validate_source_file >> [transform_load_destination, validation_failed_exception]
+download_source_file >> clean_source_file >> validate_source_file
+validate_source_file >> [transform_load_destination, validation_failed_exception]
 #transform_load_destination >> add_missed_user_data >> assign_user_grouped_data >> remove_previous_data
