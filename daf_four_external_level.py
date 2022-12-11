@@ -79,15 +79,7 @@ validate_source_file = BranchPythonOperator(task_id='validate_source_file', pyth
 validation_failed_exception = PythonOperator(task_id='validation_failed_exception', python_callable=_validation_failed_exception, dag=dat_dag)
 
 transform_load_destination = PythonOperator(task_id='transform_load_destination', trigger_rule='none_failed_or_skipped', python_callable=_transform_load_destination, dag=dat_dag)
-"""
-add_missed_user_data = PythonOperator(task_id='add_missed_user_data', trigger_rule='none_failed_or_skipped', python_callable=_add_missed_user_data, dag=dat_dag)
-assign_user_grouped_data = PythonOperator(task_id='assign_user_grouped_data', trigger_rule='none_failed_or_skipped', python_callable=_assign_user_grouped_data, dag=dat_dag)
-remove_previous_data = PythonOperator(task_id='remove_previous_data', trigger_rule='none_failed_or_skipped', python_callable=_remove_previous_data, dag=dat_dag)
 
-build_file_paths >> check_source_status >> [download_source_file, source_file_exception]
-download_source_file >> validate_source_file >> [transform_load_destination, validation_failed_exception]
-transform_load_destination >> add_missed_user_data >> assign_user_grouped_data >> remove_previous_data
-"""
 build_file_paths >> check_source_status >> [download_source_file, source_file_exception]
 download_source_file >> validate_source_file >> [transform_load_destination, validation_failed_exception]
 
