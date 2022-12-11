@@ -1,4 +1,5 @@
 from airflow import DAG
+from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from datetime import datetime
@@ -33,14 +34,18 @@ loader_configs = configs_worker.fetch_loader_configs(loader_name="FOUR_EXTERNAL_
 
 dat_dag = DAG(dag_id='daf_four_parallel_executor', schedule='@daily', default_args=default_args, catchup=False)
 
+start_execution = EmptyOperator(task_id='start_parallel_execution', dag = trgr_dag)
+end_execution = EmptyOperator(task_id='end_parallel_execution', dag = trgr_dag)
+
 add_missed_user_data = PythonOperator(task_id='add_missed_user_data', trigger_rule='none_failed_or_skipped', python_callable=_add_missed_user_data, dag=dat_dag)
 assign_user_grouped_data = PythonOperator(task_id='assign_user_grouped_data', trigger_rule='none_failed_or_skipped', python_callable=_assign_user_grouped_data, dag=dat_dag)
 remove_previous_data = PythonOperator(task_id='remove_previous_data', trigger_rule='none_failed_or_skipped', python_callable=_remove_previous_data, dag=dat_dag)
 
 
 for file_part in loader_configs['FILE_PARTS']:
-  trigger_dag = TriggerDagRunOperator(task_id="trigger_four_ext_level", trigger_dag_id="daf_four_external_level", conf={"file_part": file_part})
-  trigger_dag >> add_missed_user_data
+  trigger_task = "trigger_four_external_{file_part}".format(file_part = file_part)
+  trigger_dag = TriggerDagRunOperator(task_id=trigger_task, trigger_dag_id="daf_four_external_level", conf={"file_part": file_part})
+  start_execution >> trigger_dag >> end_execution
 
 
-add_missed_user_data >> assign_user_grouped_data >> remove_previous_data
+end_execution >> add_missed_user_data >> assign_user_grouped_data >> remove_previous_data
