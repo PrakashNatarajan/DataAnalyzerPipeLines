@@ -14,9 +14,10 @@ import trans_load_worker
 default_args = {'start_date': datetime(2022, 11, 7)}
 loader_configs = {}
 
-def _build_file_paths():
-  loader_configs['src_file_path'] = file_paths_worker.build_source_day_file_path(configs=loader_configs)
-  loader_configs['dst_file_path'] = file_paths_worker.build_destination_file_path(configs=loader_configs)
+def _build_file_paths(dag_run=None):
+  loader_configs['file_part'] = dag_run.conf.get('file_part')
+  loader_configs['src_file_path'] = file_paths_worker.build_source_part_file_path(configs=loader_configs)
+  loader_configs['dst_file_path'] = file_paths_worker.build_destxn_part_file_path(configs=loader_configs)
   loader_configs['current_time'] = datetime.now().strftime("%Y%m%d%H%M")
   #tsk_intx.xcom_push(key='loader_configs', value=loader_configs)
   return loader_configs
@@ -63,26 +64,6 @@ def _transform_load_destination(**kwargs):
   load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   trans_load_worker.daf_internal_level(load_configs)
 
-"""
-def _add_missed_user_data(**kwargs):
-  print("Transform and Loading New Data")
-  tsk_intx = kwargs['ti'] ##Task Instance
-  load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  database_worker.add_missed_user_data(load_configs['TABLE'])
-
-def _assign_user_grouped_data(**kwargs):
-  print("Transform and Loading New Data")
-  tsk_intx = kwargs['ti'] ##Task Instance
-  load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  database_worker.assign_user_group(load_configs['TABLE'])
-
-def _remove_previous_data(**kwargs):
-  print("Dropped Existing Data")
-  tsk_intx = kwargs['ti'] ##Task Instance
-  configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  configs['values'] = ""
-  database_worker.delete_record_query(configs['TABLE'], configs['COLUMNS'], configs['values'])
-"""
 
 dat_dag = DAG(dag_id='daf_four_external_level', schedule='@daily', default_args=default_args, catchup=False)
 
