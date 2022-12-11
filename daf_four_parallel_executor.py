@@ -27,7 +27,8 @@ def _remove_previous_data():
 
 loader_configs = configs_worker.fetch_loader_configs(loader_name="FOUR_EXTERNAL_LEVEL")
 
-trgr_dag = DAG(dag_id="daf_four_parallel_executor", start_date=pendulum.datetime(2022, 12, 11, tz="UTC"), catchup=False, schedule="@once", tags=['example'])
+#trgr_dag = DAG(dag_id="daf_four_parallel_executor", start_date=pendulum.datetime(2022, 12, 11, tz="UTC"), catchup=False, schedule="@once", tags=['example'])
+trgr_dag = DAG(dag_id="daf_four_parallel_executor", start_date=pendulum.datetime(2022, 12, 11, tz="UTC"), catchup=False, schedule="@once")
 
 start_execution = EmptyOperator(task_id='start_parallel_execution', dag = trgr_dag)
 end_execution = EmptyOperator(task_id='end_parallel_execution', dag = trgr_dag)
