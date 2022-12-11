@@ -32,14 +32,14 @@ def _remove_previous_data(**kwargs):
 
 loader_configs = configs_worker.fetch_loader_configs(loader_name="FOUR_EXTERNAL_LEVEL")
 
-dat_dag = DAG(dag_id='daf_four_parallel_executor', schedule='@daily', default_args=default_args, catchup=False)
+trgr_dag = DAG(dag_id='daf_four_parallel_executor', schedule='@daily', default_args=default_args, catchup=False)
 
 start_execution = EmptyOperator(task_id='start_parallel_execution', dag = trgr_dag)
 end_execution = EmptyOperator(task_id='end_parallel_execution', dag = trgr_dag)
 
-add_missed_user_data = PythonOperator(task_id='add_missed_user_data', trigger_rule='none_failed_or_skipped', python_callable=_add_missed_user_data, dag=dat_dag)
-assign_user_grouped_data = PythonOperator(task_id='assign_user_grouped_data', trigger_rule='none_failed_or_skipped', python_callable=_assign_user_grouped_data, dag=dat_dag)
-remove_previous_data = PythonOperator(task_id='remove_previous_data', trigger_rule='none_failed_or_skipped', python_callable=_remove_previous_data, dag=dat_dag)
+add_missed_user_data = PythonOperator(task_id='add_missed_user_data', trigger_rule='none_failed_or_skipped', python_callable=_add_missed_user_data, dag=trgr_dag)
+assign_user_grouped_data = PythonOperator(task_id='assign_user_grouped_data', trigger_rule='none_failed_or_skipped', python_callable=_assign_user_grouped_data, dag=trgr_dag)
+remove_previous_data = PythonOperator(task_id='remove_previous_data', trigger_rule='none_failed_or_skipped', python_callable=_remove_previous_data, dag=trgr_dag)
 
 
 for file_part in loader_configs['FILE_PARTS']:
