@@ -39,8 +39,8 @@ remove_previous_data = PythonOperator(task_id='remove_previous_data', trigger_ru
 
 
 for file_part in loader_configs['FILE_PARTS']:
-  trigger_task = "trigger_four_external_{file_part}".format(file_part = file_part)
-  trigger_dag = TriggerDagRunOperator(task_id=trigger_task, trigger_dag_id="daf_four_external_level", conf={"file_part": file_part})
+  trigger_task = "trigger_six_external_{file_part}".format(file_part = file_part)
+  trigger_dag = TriggerDagRunOperator(task_id=trigger_task, trigger_dag_id="daf_six_external_level", conf={"file_part": file_part})
   start_execution >> trigger_dag >> end_execution
 
 
