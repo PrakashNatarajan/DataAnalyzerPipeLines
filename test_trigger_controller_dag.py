@@ -10,8 +10,10 @@ trgr_dag = DAG(dag_id="test_trigger_controller_dag", start_date=pendulum.datetim
 
 start_execution = EmptyOperator(task_id='start_parallel_execution', dag = trgr_dag)
 end_execution = EmptyOperator(task_id='end_parallel_execution', dag = trgr_dag)
+final_correction = EmptyOperator(task_id='final_data_correction', dag = trgr_dag)
 
 for file_part in [1, 2, 3, 4, 5, 6, 7]:
   trigger = TriggerDagRunOperator(task_id="test_trigger_dagrun_{task_id}".format(task_id = file_part), trigger_dag_id="test_trigger_target_dag", conf={"file_part": file_part})
   start_execution >> trigger >> end_execution
 
+end_execution >> final_correction
