@@ -20,7 +20,7 @@ def _assign_user_grouped_data():
 
 def _remove_previous_data():
   print("Dropped Existing Data")
-  configs['values'] = ""
+  loader_configs['values'] = ""
   database_worker.delete_record_query(loader_configs['TABLE'], loader_configs['COLUMNS'], loader_configs['values'])
 
 
