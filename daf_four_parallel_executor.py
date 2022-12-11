@@ -10,24 +10,18 @@ import database_worker
 default_args = {'start_date': datetime(2022, 12, 11)}
 loader_configs = {}
 
-def _add_missed_user_data(**kwargs):
+def _add_missed_user_data():
   print("Transform and Loading New Data")
-  tsk_intx = kwargs['ti'] ##Task Instance
-  load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  database_worker.add_missed_user_data(load_configs['TABLE'])
+  database_worker.add_missed_user_data(loader_configs['TABLE'])
 
-def _assign_user_grouped_data(**kwargs):
+def _assign_user_grouped_data():
   print("Transform and Loading New Data")
-  tsk_intx = kwargs['ti'] ##Task Instance
-  load_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
-  database_worker.assign_user_group(load_configs['TABLE'])
+  database_worker.assign_user_group(loader_configs['TABLE'])
 
-def _remove_previous_data(**kwargs):
+def _remove_previous_data():
   print("Dropped Existing Data")
-  tsk_intx = kwargs['ti'] ##Task Instance
-  configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   configs['values'] = ""
-  database_worker.delete_record_query(configs['TABLE'], configs['COLUMNS'], configs['values'])
+  database_worker.delete_record_query(loader_configs['TABLE'], loader_configs['COLUMNS'], loader_configs['values'])
 
 
 loader_configs = configs_worker.fetch_loader_configs(loader_name="FOUR_EXTERNAL_LEVEL")
