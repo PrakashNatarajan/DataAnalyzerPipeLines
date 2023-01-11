@@ -37,7 +37,6 @@ def _source_file_exception(**kwargs):
   loader_configs = tsk_intx.xcom_pull(task_ids='build_file_paths')
   exception_worker.source_not_available(loader_configs)
 
-
 def _download_source_file(**kwargs):
   print("Downloaded File")
   tsk_intx = kwargs['ti'] ##Task Instance
